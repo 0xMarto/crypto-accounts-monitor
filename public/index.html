@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="author" content="Marto">
+    <meta name="author" content="@MartinLsanchez">
+    <meta name="description" content="The place where you can monitor all crypto accounts at the same time">
+    <meta name="keywords" content="crypto account monitor address address-monitor account-monitor">
+
+    <link rel="apple-touch-icon" sizes="57x57" href="./images/icon/apple-icon-57x57.png">
+    <link rel="apple-touch-icon" sizes="60x60" href="./images/icon/apple-icon-60x60.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="./images/icon/apple-icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="76x76" href="./images/icon/apple-icon-76x76.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="./images/icon/apple-icon-114x114.png">
+    <link rel="apple-touch-icon" sizes="120x120" href="./images/icon/apple-icon-120x120.png">
+    <link rel="apple-touch-icon" sizes="144x144" href="./images/icon/apple-icon-144x144.png">
+    <link rel="apple-touch-icon" sizes="152x152" href="./images/icon/apple-icon-152x152.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="./images/icon/apple-icon-180x180.png">
+    <link rel="icon" type="image/png" sizes="192x192" href="./images/icon/android-icon-192x192.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="./images/icon/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="96x96" href="./images/icon/favicon-96x96.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="./images/icon/favicon-16x16.png">
+    <link rel="manifest" href="./images/icon/manifest.json">
+    <meta name="msapplication-TileColor" content="#ffffff">
+    <meta name="msapplication-TileImage" content="/ms-icon-144x144.png">
+    <meta name="theme-color" content="#ffffff">
+
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+
+    <!-- Title Page-->
+    <title>Crypto Monitor</title>
+    <!-- Fontfaces CSS-->
+    <link href="css/font-face.css" rel="stylesheet" media="all">
+    <!-- Bootstrap CSS-->
+    <link href="vendor/bootstrap-4.1/bootstrap.min.css" rel="stylesheet" media="all">
+    <!-- Main CSS-->
+    <link href="css/theme.css" rel="stylesheet" media="all">
+    <!-- Custom CAM CSS-->
+    <link href="css/cam.css" rel="stylesheet" media="all">
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-125968344-1"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+
+        function gtag() {
+            dataLayer.push(arguments);
+        }
+
+        gtag('js', new Date());
+        gtag('config', 'UA-125968344-1');
+    </script>
+</head>
+<body style="background: black;">
+<div class="page-wrapper">
+    <!-- PAGE CONTAINER-->
+    <div class="page-container">
+        <!-- HEADER DESKTOP-->
+        <header class="header-desktop">
+            <div class="section__content section__content--p30">
+                <div class="container-fluid">
+                    <div class="header-wrap">
+                        <h2>Crypto Accounts Monitor</h2>
+                        <div class="header-button">
+                            <div class="account-wrap">
+                                <button id="add-address-btn" class="au-btn au-btn-icon" onclick="showAccountPanel();">
+                                    add account
+                                </button>
+                                <div id="new-account-panel" style="display:none;">
+                                    <input id="acc-address" placeholder="Address..." style="width:380px;"/>
+                                    <select id="acc-currency">
+                                        <option value="ETH">ETH</option>
+                                        <option value="BTC">BTC</option>
+                                    </select>
+                                    <input id="acc-label" placeholder="Label..." style="width: 120px;"/>
+                                    <button id="create-address-btn" class="au-btn au-btn-icon"
+                                            onclick="createAccount();">
+                                        OK
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </header>
+        <!-- END HEADER DESKTOP-->
+        <!-- MAIN CONTENT-->
+        <div class="main-content">
+            <div class="section__content section__content--p30">
+                <div class="container-fluid">
+                    <div id="account-container" class="row m-t-15">
+                        <div class="col-sm-12 col-lg-12 text-center m-b-15">
+                            <h2 class="motto">The place where you can monitor all crypto accounts at the same time</h2>
+
+                            <i>No accounts added yet... Add one to remove this examples</i>
+                        </div>
+                        <div class="col-sm-6 col-lg-3">
+                            <span class="remove-account-btn" onclick="$(this).parent().remove();">x</span>
+                            <div class="overview-item overview-item--c2">
+                                <div class="overview__inner">
+                                    <div class="overview-box clearfix">
+                                        <img src="images/btc_outline.png" class="crypto-logo">
+                                        <div class="text">
+                                            <h2>2.34512</h2>
+                                            <span>Bitcoins</span>
+                                            <span> | <b class="usd-balance">usd 517.32</b></span>
+                                        </div>
+                                    </div>
+                                    <p class="added-address"><b>Marto BTC</b> | 0x01fa2...3ef41e</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-6 col-lg-3">
+                            <span class="remove-account-btn" onclick="$(this).parent().remove();">x</span>
+                            <div class="overview-item overview-item--c4">
+                                <div class="overview__inner">
+                                    <div class="overview-box clearfix">
+                                        <img src="images/eth_outline.png" class="crypto-logo">
+                                        <div class="text">
+                                            <h2>0.00065</h2>
+                                            <span>Ethers</span>
+                                            <span> | <b class="usd-balance">usd 12.53</b></span>
+                                        </div>
+                                    </div>
+                                    <p class="added-address"><b>Nahue</b> | 0x01fa2...3ef41e</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-6 col-lg-3">
+                            <span class="remove-account-btn" onclick="$(this).parent().remove();">x</span>
+                            <div class="overview-item overview-item--c2">
+                                <div class="overview__inner">
+                                    <div class="overview-box clearfix">
+                                        <img src="images/eth_outline.png" class="crypto-logo">
+                                        <div class="text">
+                                            <h2>0.03403</h2>
+                                            <span>Ethers</span>
+                                            <span> | <b class="usd-balance">usd 1,202.12</b></span>
+                                        </div>
+                                    </div>
+                                    <p class="added-address"><b>Emi</b> | 0x01fa2...3ef41e</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-6 col-lg-3">
+                            <span class="remove-account-btn" onclick="$(this).parent().remove();">x</span>
+                            <div class="overview-item overview-item--c4">
+                                <div class="overview__inner">
+                                    <div class="overview-box clearfix">
+                                        <img src="images/btc_outline.png" class="crypto-logo">
+                                        <div class="text">
+                                            <h2>0.00230</h2>
+                                            <span>Bitcoins</span>
+                                            <span> | <b class="usd-balance">usd 402.12</b></span>
+                                        </div>
+                                    </div>
+                                    <p class="added-address"><b>Rama</b> | 0x01fa2...3ef41e</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-6 col-lg-3">
+                            <span class="remove-account-btn" onclick="$(this).parent().remove();">x</span>
+                            <div class="overview-item overview-item--c4">
+                                <div class="overview__inner">
+                                    <div class="overview-box clearfix">
+                                        <img src="images/eth_outline.png" class="crypto-logo">
+                                        <div class="text">
+                                            <h2>1.30034</h2>
+                                            <span>Ethers</span>
+                                            <span> | <b class="usd-balance">usd 302.12</b></span>
+                                        </div>
+                                    </div>
+                                    <p class="added-address"><b>Sol</b> | 0x01fa2...3ef41e</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-6 col-lg-3">
+                            <span class="remove-account-btn" onclick="$(this).parent().remove();">x</span>
+                            <div class="overview-item overview-item--c2">
+                                <div class="overview__inner">
+                                    <div class="overview-box clearfix">
+                                        <img src="images/eth_outline.png" class="crypto-logo">
+                                        <div class="text">
+                                            <h2>0.03234</h2>
+                                            <span>Ethers</span>
+                                            <span> | <b class="usd-balance">usd 2,401.02</b></span>
+                                        </div>
+                                    </div>
+                                    <p class="added-address"><b>Marto ETH</b> | 0x01fa2...3ef41e</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-6 col-lg-3">
+                            <span class="remove-account-btn" onclick="$(this).parent().remove();">x</span>
+                            <div class="overview-item overview-item--c4">
+                                <div class="overview__inner">
+                                    <div class="overview-box clearfix">
+                                        <img src="images/btc_outline.png" class="crypto-logo">
+                                        <div class="text">
+                                            <h2>1.31200</h2>
+                                            <span>Bitcoins</span>
+                                            <span> | <b class="usd-balance">usd 315.22</b></span>
+                                        </div>
+                                    </div>
+                                    <p class="added-address"><b>Agus</b> | 0x01fa2...3ef41e</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-6 col-lg-3">
+                            <span class="remove-account-btn" onclick="$(this).parent().remove();">x</span>
+                            <div class="overview-item overview-item--c2">
+                                <div class="overview__inner">
+                                    <div class="overview-box clearfix">
+                                        <img src="images/btc_outline.png" class="crypto-logo">
+                                        <div class="text">
+                                            <h2>0.00001</h2>
+                                            <span>Bitcoins</span>
+                                            <span> | <b class="usd-balance">usd 22.12</b></span>
+                                        </div>
+                                    </div>
+                                    <p class="added-address"><b>Mateo</b> | 0x01fa2...3ef41e</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row m-t-0 loading-row">
+                        <div class="col-sm-12 col-lg-12 text-center" style="height: 30px;overflow: hidden;">
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- END MAIN CONTENT-->
+    </div>
+    <div id="left-footer">
+        <span class="prices">Status: Conected</span>
+        <img style="width:150px;margin-top:-40px;" src="images/hex.gif" alt="Fetching data"/>
+    </div>
+    <div id="right-footer">
+        <span class="prices">BTC: usd -,---.-- | ETH: usd ---.--</span>
+    </div>
+    <!-- END PAGE CONTAINER-->
+</div>
+<!-- Jquery JS-->
+<script src="vendor/jquery-3.2.1.min.js"></script>
+<script src="vendor/js.cookie.js"></script>
+<!-- Bootstrap JS-->
+<script src="vendor/bootstrap-4.1/popper.min.js"></script>
+<script src="vendor/bootstrap-4.1/bootstrap.min.js"></script>
+<!-- Main JS-->
+<script src="js/cam.js"></script>
+</body>
+</html>
