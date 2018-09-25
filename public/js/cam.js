@@ -59,8 +59,9 @@ function createAccountCard(account) {
     accountHTML += '</div>';
     var pre = account.address.substr(0, 5);
     var pos = account.address.slice(-5);
-    accountHTML += '<p class="added-address" title="' + account.address + '">';
-    accountHTML += '<b>' + account.label + '</b> | ' + pre + '...' + pos;
+    accountHTML += '<p class="added-address">';
+    accountHTML += '<b>' + account.label + '</b> | ';
+    accountHTML += '<span class="tooltipster" title="' + account.address + '">' + pre + '...' + pos + '</span>';
     accountHTML += '<a class="more-info-btn" target="_blank" href="' + infoUrl + '"> > </a>';
     accountHTML += '</p>';
     accountHTML += '</div>';
@@ -71,6 +72,10 @@ function createAccountCard(account) {
     newNode.className = 'col-sm-6 col-lg-3 account-card';
     newNode.innerHTML = accountHTML;
     $('#account-container').append(newNode);
+
+    //Init card tooltip
+    var selector = $('#' + account.code);
+    initTooltip(selector);
 }
 
 
@@ -235,6 +240,9 @@ function requestEthBalance(account) {
             var accountCard = $('#' + account.code);
             accountCard.find('.balance').text(balanceText);
             accountCard.find('.balance').prop('title', (new Date).toString());
+            accountCard.find('.balance').removeClass('tooltipstered');
+            accountCard.find('.balance').addClass('tooltipster');
+            initTooltip(accountCard);
 
             if (ethPrice !== 0) {
                 var usdBalance = parseFloat((balance * ethPrice).toFixed(2));
@@ -286,6 +294,9 @@ function requestBtcBalance(account) {
             var accountCard = $('#' + account.code);
             accountCard.find('.balance').text(balanceText);
             accountCard.find('.balance').prop('title', (new Date).toString());
+            accountCard.find('.balance').removeClass('tooltipstered');
+            accountCard.find('.balance').addClass('tooltipster');
+            initTooltip(accountCard);
 
             if (btcPrice != 0) {
                 var usdBalance = parseFloat((balance * btcPrice).toFixed(2));
@@ -362,6 +373,17 @@ function btcFromSatoshi(value) {
 
 function stopAccountRefresh() {
     accountsRefresh = false;
+}
+
+function initTooltip(jquery_selector) {
+    //Init card tooltip
+    jquery_selector.find('.tooltipster').tooltipster({
+        // theme: 'tooltipster-borderless',
+        theme: 'tooltipster-shadow',
+        animation: 'fade',
+        delay: 300,
+        interactive: true
+    });
 }
 
 console.log('- All controller loaded -');
