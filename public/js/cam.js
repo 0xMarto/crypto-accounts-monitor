@@ -44,13 +44,13 @@ function createAccountCard(account) {
     if (account.currency === 'BTC') {
         accountHTML += '<img src="images/btc_outline.png" class="crypto-logo">';
         accountHTML += '<div class="text">';
-        accountHTML += '<h2 class="balance">-.-----</h2>';
+        accountHTML += '<h2 class="balance tooltipster">-.-----</h2>';
         accountHTML += '<span class="balance-label">Bitcoins | </span>';
         var infoUrl = 'https://www.blockchain.com/btc/address/' + account.address;
     } else {
         accountHTML += '<img src="images/eth_outline.png" class="crypto-logo">';
         accountHTML += '<div class="text">';
-        accountHTML += '<h2 class="balance">-.-----</h2>';
+        accountHTML += '<h2 class="balance tooltipster">-.-----</h2>';
         accountHTML += '<span class="balance-label">Ethers | </span>';
         var infoUrl = 'https://etherscan.io/address/' + account.address;
     }
@@ -74,7 +74,7 @@ function createAccountCard(account) {
     $('#account-container').append(newNode);
 
     //Init card tooltip
-    var selector = $('#' + account.code);
+    var selector = $('#' + account.code).find('.added-address');
     initTooltip(selector);
 }
 
@@ -239,11 +239,17 @@ function requestEthBalance(account) {
             var balanceText = balance >= 1000 ? balance.toLocaleString() : balance;
             var accountCard = $('#' + account.code);
             accountCard.find('.balance').text(balanceText);
-            accountCard.find('.balance').prop('title', (new Date).toString());
-            accountCard.find('.balance').removeClass('tooltipstered');
-            accountCard.find('.balance').addClass('tooltipster');
-            initTooltip(accountCard);
 
+            // Init or update tooltip
+            var title = (new Date).toTimeString();
+            if (accountCard.find('.balance').hasClass('tooltipstered')) {
+                accountCard.find('.balance').tooltipster('content', title);
+            } else {
+                accountCard.find('.balance').prop('title', title);
+                initTooltip(accountCard.find('.balance').parent());
+            }
+
+            // Show price in USD
             if (ethPrice !== 0) {
                 var usdBalance = parseFloat((balance * ethPrice).toFixed(2));
                 if (usdBalance > 99000000) {
@@ -293,12 +299,17 @@ function requestBtcBalance(account) {
             var balanceText = balance >= 1000 ? balance.toLocaleString() : balance;
             var accountCard = $('#' + account.code);
             accountCard.find('.balance').text(balanceText);
-            accountCard.find('.balance').prop('title', (new Date).toString());
-            accountCard.find('.balance').removeClass('tooltipstered');
-            accountCard.find('.balance').addClass('tooltipster');
-            initTooltip(accountCard);
 
-            if (btcPrice != 0) {
+            // Init or update tooltip
+            var title = (new Date).toTimeString();
+            if (accountCard.find('.balance').hasClass('tooltipstered')) {
+                accountCard.find('.balance').tooltipster('content', title);
+            } else {
+                accountCard.find('.balance').prop('title', title);
+                initTooltip(accountCard.find('.balance').parent());
+            }
+
+            if (btcPrice !== 0) {
                 var usdBalance = parseFloat((balance * btcPrice).toFixed(2));
                 if (usdBalance > 99000000) {
                     usdBalance = Math.round(usdBalance);
@@ -361,14 +372,12 @@ function updateEthPrice() {
 // Utility functions
 function ethFromWei(value) {
     var ethValue = parseInt(value) / 1000000000000000000;
-    var ethValueRounded = parseFloat(ethValue.toFixed(ethDecimals));
-    return ethValueRounded;
+    return parseFloat(ethValue.toFixed(ethDecimals));
 }
 
 function btcFromSatoshi(value) {
     var btcValue = parseInt(value) / 100000000;
-    var btcValueRounded = parseFloat(btcValue.toFixed(btcDecimals));
-    return btcValueRounded;
+    return parseFloat(btcValue.toFixed(btcDecimals));
 }
 
 function stopAccountRefresh() {
@@ -376,7 +385,6 @@ function stopAccountRefresh() {
 }
 
 function initTooltip(jquery_selector) {
-    //Init card tooltip
     jquery_selector.find('.tooltipster').tooltipster({
         // theme: 'tooltipster-borderless',
         theme: 'tooltipster-shadow',
