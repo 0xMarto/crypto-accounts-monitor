@@ -355,14 +355,14 @@ function updateEthPrice() {
             var prices = 'BTC: usd ' + btcPrice.toLocaleString() + ' | ETH: usd ' + ethPrice.toLocaleString();
             console.log('Price data received:' + prices);
             $('#right-footer').find('.prices').text(prices);
-
+            $('#left-footer').find('.prices').text('Status: Connected');
             setTimeout(updateEthPrice, priceFetchPeriod);
         },
         error: function (jqXHR, status) {
             // error handler
             console.log('ETH Price fail');
             console.log(jqXHR);
-
+            $('#left-footer').find('.prices').text('Status: Disconnected');
             setTimeout(updateEthPrice, priceFetchPeriod);
         }
     });
