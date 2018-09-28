@@ -32,13 +32,16 @@ function createAccountCard(account) {
     }
 
     var accountHTML = '';
-    accountHTML += '<span class="remove-account-btn" onclick="removeAccount(\'' + account.code + '\');">x</span>';
     var card_code = 'c2';
     var rest = accounts.length % 8;
     if (rest === 1 || rest === 3 || rest === 4 || rest === 6) {
         card_code = 'c4';
     }
     accountHTML += '<div class="overview-item overview-item--' + card_code + '">';
+    accountHTML += '<button type="button" class="remove-account-btn" aria-label="Close" ' +
+        'onclick="removeAccount(\'' + account.code + '\');">';
+    accountHTML += '<span aria-hidden="true">&times;</span>';
+    accountHTML += '</button>';
     accountHTML += '<div class="overview__inner">';
     accountHTML += '<div class="overview-box clearfix">';
     if (account.currency === 'BTC') {

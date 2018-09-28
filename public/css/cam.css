@@ -25,10 +25,14 @@ html, body {
     box-shadow: none;
 }
 
+#account-container {
+    max-width: 1950px;
+}
+
 .remove-account-btn {
     float: right;
-    margin-right: 10px;
-    font-family: cursive;
+    margin-right: -10px;
+    margin-top: -25px;
     color: darkseagreen;
     cursor: pointer;
 }
@@ -152,6 +156,11 @@ h2 {
 }
 
 /* Responsive media queries to support all resolutions*/
+@media only screen and (min-width: 2500px) {
+    #account-container {
+        margin: 30px auto;
+    }
+}
 
 @media only screen and (min-width: 1331px) and (max-width: 1680px) {
     #account-container .balance-label {
@@ -163,7 +172,7 @@ h2 {
     }
 }
 
-@media only screen and (min-width: 992px) and (max-width: 1330px) {
+@media only screen and (min-width: 992px) and (max-width: 1440px) {
     h2 {
         font-size: 21px;
     }

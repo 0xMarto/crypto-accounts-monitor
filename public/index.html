@@ -35,9 +35,9 @@
     <link href="css/font-face.css" rel="stylesheet" media="all">
     <!-- Bootstrap CSS-->
     <link href="vendor/bootstrap-4.1/bootstrap.min.css" rel="stylesheet" media="all">
-    <link rel="stylesheet" href="vendor/tooltipster/tooltipster.bundle.min.css" />
+    <link rel="stylesheet" href="vendor/tooltipster/tooltipster.bundle.min.css"/>
     <!--<link rel="stylesheet" href="vendor/tooltipster/tooltipster-sideTip-borderless.min.css" />-->
-    <link rel="stylesheet" href="vendor/tooltipster/tooltipster-sideTip-shadow.min.css" />
+    <link rel="stylesheet" href="vendor/tooltipster/tooltipster-sideTip-shadow.min.css"/>
     <!-- Main CSS-->
     <link href="css/theme.css" rel="stylesheet" media="all">
     <!-- Custom CAM CSS-->
@@ -100,8 +100,11 @@
                             <i>No accounts added yet... Add one to remove this examples</i>
                         </div>
                         <div class="col-sm-6 col-lg-3">
-                            <span class="remove-account-btn" onclick="$(this).parent().remove();">x</span>
                             <div class="overview-item overview-item--c2">
+                                <button type="button" class="remove-account-btn" aria-label="Close"
+                                        onclick="$(this).parent().parent().remove();">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
                                 <div class="overview__inner">
                                     <div class="overview-box clearfix">
                                         <img src="images/btc_outline.png" class="crypto-logo">
@@ -116,8 +119,11 @@
                             </div>
                         </div>
                         <div class="col-sm-6 col-lg-3">
-                            <span class="remove-account-btn" onclick="$(this).parent().remove();">x</span>
                             <div class="overview-item overview-item--c4">
+                                <button type="button" class="remove-account-btn" aria-label="Close"
+                                        onclick="$(this).parent().parent().remove();">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
                                 <div class="overview__inner">
                                     <div class="overview-box clearfix">
                                         <img src="images/eth_outline.png" class="crypto-logo">
@@ -132,8 +138,11 @@
                             </div>
                         </div>
                         <div class="col-sm-6 col-lg-3">
-                            <span class="remove-account-btn" onclick="$(this).parent().remove();">x</span>
                             <div class="overview-item overview-item--c2">
+                                <button type="button" class="remove-account-btn" aria-label="Close"
+                                        onclick="$(this).parent().parent().remove();">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
                                 <div class="overview__inner">
                                     <div class="overview-box clearfix">
                                         <img src="images/eth_outline.png" class="crypto-logo">
@@ -148,8 +157,11 @@
                             </div>
                         </div>
                         <div class="col-sm-6 col-lg-3">
-                            <span class="remove-account-btn" onclick="$(this).parent().remove();">x</span>
                             <div class="overview-item overview-item--c4">
+                                <button type="button" class="remove-account-btn" aria-label="Close"
+                                        onclick="$(this).parent().parent().remove();">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
                                 <div class="overview__inner">
                                     <div class="overview-box clearfix">
                                         <img src="images/btc_outline.png" class="crypto-logo">
@@ -164,8 +176,11 @@
                             </div>
                         </div>
                         <div class="col-sm-6 col-lg-3">
-                            <span class="remove-account-btn" onclick="$(this).parent().remove();">x</span>
                             <div class="overview-item overview-item--c4">
+                                <button type="button" class="remove-account-btn" aria-label="Close"
+                                        onclick="$(this).parent().parent().remove();">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
                                 <div class="overview__inner">
                                     <div class="overview-box clearfix">
                                         <img src="images/eth_outline.png" class="crypto-logo">
@@ -180,8 +195,11 @@
                             </div>
                         </div>
                         <div class="col-sm-6 col-lg-3">
-                            <span class="remove-account-btn" onclick="$(this).parent().remove();">x</span>
                             <div class="overview-item overview-item--c2">
+                                <button type="button" class="remove-account-btn" aria-label="Close"
+                                        onclick="$(this).parent().parent().remove();">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
                                 <div class="overview__inner">
                                     <div class="overview-box clearfix">
                                         <img src="images/eth_outline.png" class="crypto-logo">
@@ -196,8 +214,11 @@
                             </div>
                         </div>
                         <div class="col-sm-6 col-lg-3">
-                            <span class="remove-account-btn" onclick="$(this).parent().remove();">x</span>
                             <div class="overview-item overview-item--c4">
+                                <button type="button" class="remove-account-btn" aria-label="Close"
+                                        onclick="$(this).parent().parent().remove();">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
                                 <div class="overview__inner">
                                     <div class="overview-box clearfix">
                                         <img src="images/btc_outline.png" class="crypto-logo">
@@ -212,8 +233,11 @@
                             </div>
                         </div>
                         <div class="col-sm-6 col-lg-3">
-                            <span class="remove-account-btn" onclick="$(this).parent().remove();">x</span>
                             <div class="overview-item overview-item--c2">
+                                <button type="button" class="remove-account-btn" aria-label="Close"
+                                        onclick="$(this).parent().parent().remove();">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
                                 <div class="overview__inner">
                                     <div class="overview-box clearfix">
                                         <img src="images/eth_outline.png" class="crypto-logo">
@@ -226,11 +250,6 @@
                                     <p class="added-address"><b>Contract X</b> | 0x01fa2...3ef41e</p>
                                 </div>
                             </div>
-                        </div>
-                    </div>
-                    <div class="row m-t-0 loading-row">
-                        <div class="col-sm-12 col-lg-12 text-center" style="height: 30px;overflow: hidden;">
-
                         </div>
                     </div>
                 </div>
