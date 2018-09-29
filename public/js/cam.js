@@ -202,13 +202,15 @@ function addAccount(currency, address, label) {
 }
 
 function removeAccount(code) {
-    accounts = accounts.filter(el => el.code !== code);
+    var notCurrentAccount = function (account) {
+        return account.code !== code;
+    };
+    accounts = accounts.filter(notCurrentAccount);
     $('#' + code).fadeOut('normal', function () {
         $('#' + code).remove();
     });
     saveAccountsToCookie();
 }
-
 
 // Fetch data functions
 function requestEthBalance(account) {
