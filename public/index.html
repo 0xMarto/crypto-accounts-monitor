@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="author" content="Marto">
     <title>Crypto Monitor</title>
-    <meta name="description" content="The place where you can monitor all crypto accounts at the same time">
+    <meta name="description" content="The place where you can monitor all your favorites accounts at the same time">
     <meta name="keywords" content="crypto account monitor address address-monitor account-monitor">
 
     <link rel="apple-touch-icon" sizes="57x57" href="./images/icon/apple-icon-57x57.png">
@@ -32,16 +32,16 @@
     <meta name="twitter:card" content="summary">
     <meta name="twitter:site" content="@martinlsanchez">
     <meta name="twitter:title" content="Crypto Monitor">
-    <meta name="twitter:description" content="The place where you can monitor all crypto accounts at the same time">
+    <meta name="twitter:description" content="The place where you can monitor all your favorites accounts at the same time">
     <meta name="twitter:creator" content="@martinlsanchez">
     <meta name="twitter:image" content="https://crypto-monitor.app/images/fb-share-1.png">
 
-    <meta property="og:title" content="Crypto Monitor" />
-    <meta property="og:type" content="website" />
-    <meta property="og:url" content="https://crypto-monitor.app" />
-    <meta property="og:image" content="https://crypto-monitor.app/images/fb-share-1.png" />
-    <meta property="og:description" content="The place where you can monitor all crypto accounts at the same time" />
-    <meta property="og:site_name" content="Crypto Monitor" />
+    <meta property="og:title" content="Crypto Monitor"/>
+    <meta property="og:type" content="website"/>
+    <meta property="og:url" content="https://crypto-monitor.app"/>
+    <meta property="og:image" content="https://crypto-monitor.app/images/fb-share-1.png"/>
+    <meta property="og:description" content="The place where you can monitor all your favorites accounts at the same time"/>
+    <meta property="og:site_name" content="Crypto Monitor"/>
 
     <link href="css/font-face.css" rel="stylesheet" media="all">
     <link href="vendor/bootstrap-4.1/bootstrap.min.css" rel="stylesheet" media="all">
@@ -102,9 +102,15 @@
                 <div class="container-fluid">
                     <div id="account-container" class="row m-t-15">
                         <div class="col-sm-12 col-lg-12 text-center m-b-15">
-                            <h2 class="motto">The place where you can monitor all crypto accounts at the same time</h2>
+                            <h2 class="motto">The place where you can monitor all your favorites accounts at the same
+                                time</h2>
 
-                            <i>No accounts added yet... Add one to remove this examples</i>
+                            <i style="color: lightgrey;">
+                                No accounts added yet....
+                                <b onclick="showAccountPanel();" style="cursor:pointer;"> ADD ONE </b>
+                                ,only with the public address,
+                                <b>to remove this examples</b>
+                            </i>
                         </div>
                         <div class="col-sm-6 col-lg-3">
                             <div class="overview-item overview-item--c2">
@@ -116,12 +122,12 @@
                                     <div class="overview-box clearfix">
                                         <img src="images/btc_outline.png" class="crypto-logo">
                                         <div class="text">
-                                            <h2>2.34512</h2>
+                                            <h2>19,414.42</h2>
                                             <span>Bitcoins</span>
-                                            <span> | <b class="usd-balance">usd 517.32</b></span>
+                                            <span> | <b class="usd-balance">usd 122,016,503.95</b></span>
                                         </div>
                                     </div>
-                                    <p class="added-address"><b>Trezor BTC 1</b> | 0x01fa2...3ef41e</p>
+                                    <p class="added-address"><b>Andreas A.</b> | 1PeizMg...U5zGW</p>
                                 </div>
                             </div>
                         </div>
@@ -135,12 +141,12 @@
                                     <div class="overview-box clearfix">
                                         <img src="images/eth_outline.png" class="crypto-logo">
                                         <div class="text">
-                                            <h2>0.00065</h2>
+                                            <h2>365,003.473</h2>
                                             <span>Ethers</span>
-                                            <span> | <b class="usd-balance">usd 12.53</b></span>
+                                            <span> | <b class="usd-balance">usd 73,186,846.28</b></span>
                                         </div>
                                     </div>
-                                    <p class="added-address"><b>Trezor ETH 1</b> | 0x01fa2...3ef41e</p>
+                                    <p class="added-address"><b>Vitalik B.</b> | 0xAb5...aeC9B</p>
                                 </div>
                             </div>
                         </div>
@@ -154,12 +160,12 @@
                                     <div class="overview-box clearfix">
                                         <img src="images/eth_outline.png" class="crypto-logo">
                                         <div class="text">
-                                            <h2>0.03403</h2>
+                                            <h2>504,999.997</h2>
                                             <span>Ethers</span>
-                                            <span> | <b class="usd-balance">usd 1,202.12</b></span>
+                                            <span> | <b class="usd-balance">usd usd 101,242,399</b></span>
                                         </div>
                                     </div>
-                                    <p class="added-address"><b>Ledger 2</b> | 0x01fa2...3ef41e</p>
+                                    <p class="added-address"><b>The Pope</b> | 0x746...11e82</p>
                                 </div>
                             </div>
                         </div>
@@ -173,12 +179,12 @@
                                     <div class="overview-box clearfix">
                                         <img src="images/btc_outline.png" class="crypto-logo">
                                         <div class="text">
-                                            <h2>0.00230</h2>
+                                            <h2>19.57859</h2>
                                             <span>Bitcoins</span>
-                                            <span> | <b class="usd-balance">usd 402.12</b></span>
+                                            <span> | <b class="usd-balance">usd 123,833.02</b></span>
                                         </div>
                                     </div>
-                                    <p class="added-address"><b>Binance Acc 1</b> | 0x01fa2...3ef41e</p>
+                                    <p class="added-address"><b>FBI (Silk Road)</b> | 1F1tA...n4xqX</p>
                                 </div>
                             </div>
                         </div>
@@ -197,7 +203,7 @@
                                             <span> | <b class="usd-balance">usd 302.12</b></span>
                                         </div>
                                     </div>
-                                    <p class="added-address"><b>Binance Acc 2</b> | 0x01fa2...3ef41e</p>
+                                    <p class="added-address"><b>Your Trezor Acc</b> | 0x01fa2...3ef41e</p>
                                 </div>
                             </div>
                         </div>
@@ -216,7 +222,7 @@
                                             <span> | <b class="usd-balance">usd 2,401.02</b></span>
                                         </div>
                                     </div>
-                                    <p class="added-address"><b>Coinbase ETH</b> | 0x01fa2...3ef41e</p>
+                                    <p class="added-address"><b>My Trezor Acc</b> | 0x01fa2...3ef41e</p>
                                 </div>
                             </div>
                         </div>
@@ -230,12 +236,12 @@
                                     <div class="overview-box clearfix">
                                         <img src="images/btc_outline.png" class="crypto-logo">
                                         <div class="text">
-                                            <h2>1.31200</h2>
+                                            <h2>16.88813</h2>
                                             <span>Bitcoins</span>
-                                            <span> | <b class="usd-balance">usd 315.22</b></span>
+                                            <span> | <b class="usd-balance">usd 106,872.82</b></span>
                                         </div>
                                     </div>
-                                    <p class="added-address"><b>Coinbase BTC</b> | 0x01fa2...3ef41e</p>
+                                    <p class="added-address"><b>Satoshi N.</b> | 1A1zP...ivfNa</p>
                                 </div>
                             </div>
                         </div>
@@ -254,9 +260,18 @@
                                             <span> | <b class="usd-balance">usd 220.12</b></span>
                                         </div>
                                     </div>
-                                    <p class="added-address"><b>Contract X</b> | 0x01fa2...3ef41e</p>
+                                    <p class="added-address"><b>Contract X Balance</b> | 0x01fa2...3ef41e</p>
                                 </div>
                             </div>
+                        </div>
+
+                        <div class="col-sm-12 col-lg-12 text-center m-b-15">
+                            <h2 class="motto">
+                                No private data needed<br/><br/>
+                                Nothing stored
+
+                            </h2>
+                            <h2>AWESOME TOOL!</h2>
                         </div>
                     </div>
                 </div>
