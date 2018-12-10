@@ -4,24 +4,25 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="author" content="Marto">
+    <meta name="version" content="1.4.0">
     <title>Crypto Monitor</title>
-    <meta name="description" content="The place where you can monitor all your favorites accounts at the same time">
-    <meta name="keywords" content="crypto account monitor address address-monitor account-monitor">
+    <meta name="description" content="The place where you can track all your favorites accounts at the same time">
+    <meta name="keywords" content="crypto account monitor tracker address address-monitor address-tracker">
 
-    <link rel="apple-touch-icon" sizes="57x57" href="./images/icon/apple-icon-57x57.png">
-    <link rel="apple-touch-icon" sizes="60x60" href="./images/icon/apple-icon-60x60.png">
-    <link rel="apple-touch-icon" sizes="72x72" href="./images/icon/apple-icon-72x72.png">
-    <link rel="apple-touch-icon" sizes="76x76" href="./images/icon/apple-icon-76x76.png">
-    <link rel="apple-touch-icon" sizes="114x114" href="./images/icon/apple-icon-114x114.png">
-    <link rel="apple-touch-icon" sizes="120x120" href="./images/icon/apple-icon-120x120.png">
-    <link rel="apple-touch-icon" sizes="144x144" href="./images/icon/apple-icon-144x144.png">
-    <link rel="apple-touch-icon" sizes="152x152" href="./images/icon/apple-icon-152x152.png">
-    <link rel="apple-touch-icon" sizes="180x180" href="./images/icon/apple-icon-180x180.png">
-    <link rel="icon" type="image/png" sizes="192x192" href="./images/icon/android-icon-192x192.png">
-    <link rel="icon" type="image/png" sizes="32x32" href="./images/icon/favicon-32x32.png">
-    <link rel="icon" type="image/png" sizes="96x96" href="./images/icon/favicon-96x96.png">
-    <link rel="icon" type="image/png" sizes="16x16" href="./images/icon/favicon-16x16.png">
-    <link rel="manifest" href="./images/icon/manifest.json">
+    <link rel="apple-touch-icon" sizes="57x57" href="images/icon/apple-icon-57x57.png">
+    <link rel="apple-touch-icon" sizes="60x60" href="images/icon/apple-icon-60x60.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="images/icon/apple-icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="76x76" href="images/icon/apple-icon-76x76.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="images/icon/apple-icon-114x114.png">
+    <link rel="apple-touch-icon" sizes="120x120" href="images/icon/apple-icon-120x120.png">
+    <link rel="apple-touch-icon" sizes="144x144" href="images/icon/apple-icon-144x144.png">
+    <link rel="apple-touch-icon" sizes="152x152" href="images/icon/apple-icon-152x152.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="images/icon/apple-icon-180x180.png">
+    <link rel="icon" type="image/png" sizes="192x192" href="images/icon/android-icon-192x192.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="images/icon/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="96x96" href="images/icon/favicon-96x96.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="images/icon/favicon-16x16.png">
+    <link rel="manifest" href="images/icon/manifest.json">
     <meta name="msapplication-TileColor" content="#ffffff">
     <meta name="msapplication-TileImage" content="/ms-icon-144x144.png">
     <meta name="theme-color" content="#ffffff">
@@ -32,7 +33,8 @@
     <meta name="twitter:card" content="summary">
     <meta name="twitter:site" content="@martinlsanchez">
     <meta name="twitter:title" content="Crypto Monitor">
-    <meta name="twitter:description" content="The place where you can monitor all your favorites accounts at the same time">
+    <meta name="twitter:description"
+          content="The place where you can monitor all your favorites accounts at the same time">
     <meta name="twitter:creator" content="@martinlsanchez">
     <meta name="twitter:image" content="https://crypto-monitor.app/images/fb-share-1.png">
 
@@ -40,15 +42,18 @@
     <meta property="og:type" content="website"/>
     <meta property="og:url" content="https://crypto-monitor.app"/>
     <meta property="og:image" content="https://crypto-monitor.app/images/fb-share-1.png"/>
-    <meta property="og:description" content="The place where you can monitor all your favorites accounts at the same time"/>
+    <meta property="og:description"
+          content="The place where you can monitor all your favorites accounts at the same time"/>
     <meta property="og:site_name" content="Crypto Monitor"/>
 
-    <link href="css/font-face.css" rel="stylesheet" media="all">
-    <link href="vendor/bootstrap-4.1/bootstrap.min.css" rel="stylesheet" media="all">
-    <link rel="stylesheet" href="vendor/tooltipster/tooltipster.bundle.min.css"/>
-    <link rel="stylesheet" href="vendor/tooltipster/tooltipster-sideTip-shadow.min.css"/>
-    <link href="css/theme-min.css" rel="stylesheet" media="all">
-    <link href="css/cam-prod-min.css" rel="stylesheet" media="all">
+    <link rel="stylesheet" href="css/font-face.css" media="all">
+    <link rel="stylesheet" href="vendor/bootstrap-4.1/bootstrap.min.css" media="all">
+    <link rel="stylesheet" href="vendor/tooltipster/tooltipster.bundle.min.css" media="all"/>
+    <link rel="stylesheet" href="vendor/tooltipster/tooltipster-sideTip-shadow.min.css" media="all"/>
+    <link rel="stylesheet" href="css/theme-min.css" media="all">
+    <link rel="stylesheet" href="vendor/vex/vex-prod-min.css" media="all"/>
+    <link rel="stylesheet" href="vendor/vex/vex-theme-flat-attack-prod-min.css" media="all"/>
+    <link rel="stylesheet" href="css/cam-prod-min.css" media="all"/>
 
     <script async src="https://www.googletagmanager.com/gtag/js?id=UA-125968344-1"></script>
     <script>
@@ -77,6 +82,9 @@
                                 <button id="add-address-btn" class="au-btn au-btn-icon" onclick="showAccountPanel();">
                                     add account
                                 </button>
+                                <button id="config-btn" class="au-btn au-btn-icon" onclick="showConfigPanel();">
+                                    <img src="images/btn_config.png">
+                                </button>
                                 <div id="new-account-panel" style="display:none;">
                                     <input id="acc-address" placeholder="Address..." style="width:380px;"/>
                                     <select id="acc-currency">
@@ -102,7 +110,7 @@
                 <div class="container-fluid">
                     <div id="account-container" class="row m-t-15">
                         <div class="col-sm-12 col-lg-12 text-center m-b-15">
-                            <h2 class="motto">The place where you can monitor all your favorites accounts at the same
+                            <h2 class="motto">The place where you can track all your favorites accounts at the same
                                 time</h2>
 
                             <i style="color: lightgrey;">
@@ -141,9 +149,9 @@
                                     <div class="overview-box clearfix">
                                         <img src="images/eth_outline.png" class="crypto-logo">
                                         <div class="text">
-                                            <h2>365,003.473</h2>
+                                            <h2>365,003.47</h2>
                                             <span>Ethers</span>
-                                            <span> | <b class="usd-balance">usd 73,186,846.28</b></span>
+                                            <span> | <b class="usd-balance">usd 73,186,846</b></span>
                                         </div>
                                     </div>
                                     <p class="added-address"><b>Vitalik B.</b> | 0xAb5...aeC9B</p>
@@ -160,7 +168,7 @@
                                     <div class="overview-box clearfix">
                                         <img src="images/eth_outline.png" class="crypto-logo">
                                         <div class="text">
-                                            <h2>504,999.997</h2>
+                                            <h2>504,999.97</h2>
                                             <span>Ethers</span>
                                             <span> | <b class="usd-balance">usd 82,242,399</b></span>
                                         </div>
@@ -269,9 +277,8 @@
                             <h2 class="motto">
                                 No private data needed<br/><br/>
                                 Nothing stored
-
                             </h2>
-                            <h2>AWESOME TOOL!</h2>
+                            <h2>AWESOME CRYPTO TOOL!</h2>
                         </div>
                     </div>
                 </div>
@@ -287,13 +294,46 @@
         <span class="prices">BTC: usd -,---.-- | ETH: usd ---.--</span>
     </div>
     <!-- END PAGE CONTAINER-->
+    <!-- START CONFIG PANEL-->
+    <div id="config-container" style="display: none;">
+        <div id="config-panel">
+            <h3 class="text-center">
+                <img src="images/icon/favicon-96x96.png" style="border-radius: 5px;">
+            </h3>
+            <br/>
+            <h3>
+                For custom implementations or other ideas, contact me:
+                <div class="text-center">
+                    <a href="https://twitter.com/MartinLSanchez" target="_blank">
+                        <img src="images/logo_twitter.png" style="width: 50px;">
+                    </a>
+                    <a href="https://github.com/martinlsanchez" target="_blank">
+                        <img src="images/logo_github.png" style="width: 50px;">
+                    </a>
+                </div>
+            </h3>
+            <br/>
+            <h3>To support this and other free tools,<br/> you can donate any amount to:</h3>
+            <p>
+                <img src="images/btc_outline.png" class="crypto-logo">
+                <b>35jENPHEW4w4k4UxMcoKM1FAT5uZ1gwFrj</b>
+            </p>
+            <p>
+                <img src="images/eth_outline.png" class="crypto-logo">
+                <b>0xB39794b9921fBff79565dD15682E5793a0d07B68</b>
+            </p>
+        </div>
+    </div>
+    <!-- END CONFIG PANEL-->
 </div>
 
-<script src="vendor/jquery-3.2.1.min.js"></script>
-<script src="vendor/js.cookie.js"></script>
-<script src="vendor/bootstrap-4.1/popper.min.js"></script>
-<script src="vendor/bootstrap-4.1/bootstrap.min.js"></script>
+<script type="text/javascript" src="vendor/jquery-3.2.1.min.js"></script>
+<script type="text/javascript" src="vendor/js.cookie.js"></script>
+<script type="text/javascript" src="vendor/bootstrap-4.1/popper.min.js"></script>
+<script type="text/javascript" src="vendor/bootstrap-4.1/bootstrap.min.js"></script>
 <script type="text/javascript" src="vendor/tooltipster/tooltipster.bundle.min.js"></script>
-<script src="js/cam-prod-min.js"></script>
+<script type="text/javascript" src="vendor/vex/vex.combined.min.js"></script>
+<script>vex.defaultOptions.className = 'vex-theme-flat-attack'</script>
+<script type="text/javascript" src="js/cam-prod-min.js"></script>
 </body>
 </html>

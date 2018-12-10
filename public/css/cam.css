@@ -61,6 +61,39 @@ h2 {
     color: black;
 }
 
+#config-btn {
+    padding: 0 10px;
+}
+
+#config-btn img {
+    height: 27px;
+}
+
+#config-panel .crypto-logo {
+    height: 30px;
+    margin: 0;
+}
+
+#config-panel a {
+    font-size: 26px;
+    padding: 10px;
+    font-family: monospace;
+    margin-top: 15px;
+}
+
+#config-panel p {
+    font-size: 16px;
+    font-family: monospace;
+    padding-left: 20px;
+    margin-top: 15px;
+}
+
+.vex.vex-theme-flat-attack .vex-dialog-button.vex-dialog-button-primary {
+    background: #6ec34e;
+    color: #fff;
+    font-size: 20px;
+}
+
 #right-footer {
     position: fixed;
     bottom: 10px;
@@ -248,5 +281,15 @@ h2 {
 
     #acc-address {
         width: 310px !important;
+    }
+
+    #config-panel p {
+        font-size: 9px;
+        padding-left: 0;
+    }
+
+    #config-panel h3{
+        font-size: 14px;
+        margin-top: -20px;
     }
 }

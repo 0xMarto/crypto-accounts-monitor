@@ -22,8 +22,15 @@ function Account(code, currency, address, label) {
 // GUI funtions
 function showAccountPanel() {
     $('#add-address-btn').hide();
+    $('#config-btn').hide();
     $('#new-account-panel').fadeIn();
     $('#acc-address').focus();
+}
+
+function showConfigPanel() {
+    vex.dialog.alert({
+        unsafeMessage: $('#config-container').html(),
+    });
 }
 
 function createAccountCard(account) {
@@ -155,11 +162,13 @@ function createAccount() {
         $('#acc-label').val('');
         $('#new-account-panel').hide();
         $('#add-address-btn').fadeIn();
+        $('#config-btn').fadeIn();
     } else {
         alert('Verify address format for the currency selected');
         if (address === '') {
             $('#new-account-panel').hide();
             $('#add-address-btn').fadeIn();
+            $('#config-btn').fadeIn();
         }
     }
 }
