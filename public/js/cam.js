@@ -57,7 +57,26 @@ function createAccountCard(account) {
         accountHTML += '<h2 class="balance tooltipster">-.-----</h2>';
         accountHTML += '<span class="balance-label">Bitcoins | </span>';
         var infoUrl = 'https://www.blockchain.com/btc/address/' + account.address;
+    } else if (account.currency === 'MANA') {
+        accountHTML += '<img src="images/mana_token_grey.png" class="crypto-logo">';
+        accountHTML += '<div class="text">';
+        accountHTML += '<h2 class="balance tooltipster">-.-----</h2>';
+        accountHTML += '<span class="balance-label">MANA | </span>';
+        var infoUrl = 'https://etherscan.io/tokenholdings?a=' + account.address;
+    } else if (account.currency === 'MKR') {
+        accountHTML += '<img src="images/mkr_token_grey.png" class="crypto-logo">';
+        accountHTML += '<div class="text">';
+        accountHTML += '<h2 class="balance tooltipster">-.-----</h2>';
+        accountHTML += '<span class="balance-label">MKR | </span>';
+        var infoUrl = 'https://etherscan.io/tokenholdings?a=' + account.address;
+    } else if (account.currency === 'POLY') {
+        accountHTML += '<img src="images/poly_token_grey.png" class="crypto-logo">';
+        accountHTML += '<div class="text">';
+        accountHTML += '<h2 class="balance tooltipster">-.-----</h2>';
+        accountHTML += '<span class="balance-label">POLY | </span>';
+        var infoUrl = 'https://etherscan.io/tokenholdings?a=' + account.address;
     } else {
+        // Case: ETH
         accountHTML += '<img src="images/eth_outline.png" class="crypto-logo">';
         accountHTML += '<div class="text">';
         accountHTML += '<h2 class="balance tooltipster">-.-----</h2>';
@@ -138,8 +157,10 @@ function updateAccounts() {
         var account = accounts[currentAccountUpdated];
         if (account.currency === 'BTC') {
             requestBtcBalance(account);
-        } else {
+        } else if (account.currency === 'ETH') {
             requestEthBalance(account);
+        } else {
+            requestEthTokenBalance(account);
         }
     } catch (e) {
         console.log('Some account was removed or some error found. Restarting.');
@@ -175,7 +196,7 @@ function createAccount() {
 
 function addAccount(currency, address, label) {
     // Validate inputs
-    if (currency !== 'BTC' && currency !== 'ETH') {
+    if (currency !== 'BTC' && currency !== 'ETH' && currency !== 'MANA' && currency !== 'MKR' && currency !== 'POLY') {
         console.log('unsupported currency');
         return false;
     }
@@ -271,6 +292,75 @@ function requestEthBalance(account) {
                 }
                 accountCard.find('.usd-balance').text('usd ' + usdBalance.toLocaleString());
             }
+
+            // Send call to update next account
+            currentAccountUpdated += 1;
+            refreshAccounts();
+        },
+        error: function (jqXHR, status) {
+            // error handler
+            console.log('Eth fail: ' + status.code);
+            console.log(jqXHR);
+
+            // Send call to update next account
+            currentAccountUpdated += 1;
+            refreshAccounts();
+        }
+    });
+}
+
+function requestEthTokenBalance(account) {
+    if (accounts.length === 0) {
+        console.log('No accounts added yet');
+        refreshAccounts();
+    }
+
+    var etherScanApiKey = "HIVHFXVPC9CPKN1RFZ8PN8HAAMQHNBTCHA";
+    var module = 'account';
+    var action = 'tokenbalance';
+    var contractAddress;
+    if (account.currency === 'MANA') {
+        contractAddress = '0x0f5d2fb29fb7d3cfee444a200298f468908cc942';
+    } else if (account.currency === 'MKR') {
+        contractAddress = '0x9f8f72aa9304c8b593d555f12ef6589cc3a579a2';
+    } else {
+        // CASE: currency === 'POLY'
+        contractAddress = '0x9992ec3cf6a55b00978cddf2b27bc6882d88d1ec';
+    }
+    var address = account.address;
+    var tag = 'latest';
+
+    var etherScanUrl = "https://api.etherscan.io/api" +
+        '?module=' + module + '&action=' + action + '&contractaddress=' + contractAddress + '&address=' + address +
+        '&tag=' + tag + '&apikey' + etherScanApiKey;
+
+    $.ajax({
+        type: "GET",
+        url: etherScanUrl,
+        data: {},
+        contentType: "application/json; charset=utf-8",
+        crossDomain: true,
+        dataType: "json",
+        success: function (data, status, jqXHR) {
+            console.log('Token data received: ' + account.code);
+
+            // Populate account with balance received
+            var balance = ethFromWei(data['result']);
+            var balanceText = balance >= 1000 ? balance.toLocaleString() : balance;
+            var accountCard = $('#' + account.code);
+            accountCard.find('.balance').text(balanceText);
+
+            // Init or update tooltip
+            var title = (new Date).toTimeString();
+            if (accountCard.find('.balance').hasClass('tooltipstered')) {
+                accountCard.find('.balance').tooltipster('content', title);
+            } else {
+                accountCard.find('.balance').prop('title', title);
+                initTooltip(accountCard.find('.balance').parent());
+            }
+
+            // TODO Show price in USD
+            accountCard.find('.usd-balance').text('Token');
 
             // Send call to update next account
             currentAccountUpdated += 1;
