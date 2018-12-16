@@ -10,6 +10,10 @@ var currentAccountUpdated = 0;
 var accountsRefresh = false;
 var ethPrice = 0;
 var btcPrice = 0;
+var tokensInfo = new Map();
+tokensInfo.set('MANA', {'contract': '0x0f5d2fb29fb7d3cfee444a200298f468908cc942', 'price': 0});
+tokensInfo.set('MKR', {'contract': '0x9f8f72aa9304c8b593d555f12ef6589cc3a579a2', 'price': 0});
+tokensInfo.set('POLY', {'contract': '0x9992ec3cf6a55b00978cddf2b27bc6882d88d1ec', 'price': 0});
 
 function Account(code, currency, address, label) {
     this.code = code;
@@ -19,7 +23,7 @@ function Account(code, currency, address, label) {
 }
 
 
-// GUI funtions
+// GUI functions
 function showAccountPanel() {
     $('#add-address-btn').hide();
     $('#config-btn').hide();
@@ -108,7 +112,7 @@ function createAccountCard(account) {
 }
 
 
-// Cookie management funtions
+// Cookie management functions
 function loadSavedAccountsFromCookie() {
     var savedAccounts = Cookies.get("cam-info");
     if (savedAccounts && savedAccounts.length > 2) {
@@ -242,6 +246,7 @@ function removeAccount(code) {
     saveAccountsToCookie();
 }
 
+
 // Fetch data functions
 function requestEthBalance(account) {
     if (accounts.length === 0) {
@@ -263,7 +268,6 @@ function requestEthBalance(account) {
         type: "GET",
         url: etherScanUrl,
         data: {},
-        contentType: "application/json; charset=utf-8",
         crossDomain: true,
         dataType: "json",
         success: function (data, status, jqXHR) {
@@ -300,7 +304,6 @@ function requestEthBalance(account) {
         error: function (jqXHR, status) {
             // error handler
             console.log('Eth fail: ' + status.code);
-            console.log(jqXHR);
 
             // Send call to update next account
             currentAccountUpdated += 1;
@@ -318,15 +321,7 @@ function requestEthTokenBalance(account) {
     var etherScanApiKey = "HIVHFXVPC9CPKN1RFZ8PN8HAAMQHNBTCHA";
     var module = 'account';
     var action = 'tokenbalance';
-    var contractAddress;
-    if (account.currency === 'MANA') {
-        contractAddress = '0x0f5d2fb29fb7d3cfee444a200298f468908cc942';
-    } else if (account.currency === 'MKR') {
-        contractAddress = '0x9f8f72aa9304c8b593d555f12ef6589cc3a579a2';
-    } else {
-        // CASE: currency === 'POLY'
-        contractAddress = '0x9992ec3cf6a55b00978cddf2b27bc6882d88d1ec';
-    }
+    var contractAddress = tokensInfo.get(account.currency).contract;
     var address = account.address;
     var tag = 'latest';
 
@@ -338,7 +333,6 @@ function requestEthTokenBalance(account) {
         type: "GET",
         url: etherScanUrl,
         data: {},
-        contentType: "application/json; charset=utf-8",
         crossDomain: true,
         dataType: "json",
         success: function (data, status, jqXHR) {
@@ -359,8 +353,17 @@ function requestEthTokenBalance(account) {
                 initTooltip(accountCard.find('.balance').parent());
             }
 
-            // TODO Show price in USD
-            accountCard.find('.usd-balance').text('Token');
+            // Show balance in USD
+            var tokenPrice = tokensInfo.get(account.currency).price;
+            if (tokenPrice !== 0) {
+                var usdBalance = parseFloat((balance * tokenPrice).toFixed(2));
+                if (usdBalance > 99000000) {
+                    usdBalance = Math.round(usdBalance);
+                }
+                accountCard.find('.usd-balance').text('usd ' + usdBalance.toLocaleString());
+            } else {
+                accountCard.find('.usd-balance').text('Token');
+            }
 
             // Send call to update next account
             currentAccountUpdated += 1;
@@ -369,7 +372,6 @@ function requestEthTokenBalance(account) {
         error: function (jqXHR, status) {
             // error handler
             console.log('Eth fail: ' + status.code);
-            console.log(jqXHR);
 
             // Send call to update next account
             currentAccountUpdated += 1;
@@ -392,7 +394,6 @@ function requestBtcBalance(account) {
         type: "GET",
         url: blockexplorerUrl,
         data: {},
-        contentType: "application/json; charset=utf-8",
         crossDomain: true,
         dataType: "json",
         success: function (data, status, jqXHR) {
@@ -413,6 +414,7 @@ function requestBtcBalance(account) {
                 initTooltip(accountCard.find('.balance').parent());
             }
 
+            // Show balance in USD
             if (btcPrice !== 0) {
                 var usdBalance = parseFloat((balance * btcPrice).toFixed(2));
                 if (usdBalance > 99000000) {
@@ -428,7 +430,6 @@ function requestBtcBalance(account) {
         error: function (jqXHR, status) {
             // error handler
             console.log('BTC Update fail: ' + status.code);
-            console.log(jqXHR);
 
             // Send call to update next account
             currentAccountUpdated += 1;
@@ -437,7 +438,7 @@ function requestBtcBalance(account) {
     });
 }
 
-function updateEthPrice() {
+function updateEthBtcPrice() {
     var etherScanApiKey = "HIVHFXVPC9CPKN1RFZ8PN8HAAMQHNBTCHA";
     var module = 'stats';
     var action = 'ethprice';
@@ -449,27 +450,51 @@ function updateEthPrice() {
         type: "GET",
         url: etherScanUrl,
         data: {},
-        contentType: "application/json; charset=utf-8",
         crossDomain: true,
         dataType: "json",
         success: function (data, status, jqXHR) {
             ethPrice = parseFloat(data['result']['ethusd']);
-            ethBtcPrice = parseFloat(data['result']['ethbtc']);
+            var ethBtcPrice = parseFloat(data['result']['ethbtc']);
             btcPrice = parseFloat((ethPrice / ethBtcPrice).toFixed(2));
             var prices = 'BTC: usd ' + btcPrice.toLocaleString() + ' | ETH: usd ' + ethPrice.toLocaleString();
-            console.log('Price data received:' + prices);
+            console.log('Price data received - ' + prices);
             $('#right-footer').find('.prices').text(prices);
             $('#left-footer').find('.prices').text('Status: Connected');
-            setTimeout(updateEthPrice, priceFetchPeriod);
+            setTimeout(updateEthBtcPrice, priceFetchPeriod);
         },
         error: function (jqXHR, status) {
             // error handler
-            console.log('ETH Price fail');
-            console.log(jqXHR);
+            console.log('Price data fail: ETH | BTC');
+
             $('#left-footer').find('.prices').text('Status: Disconnected');
-            setTimeout(updateEthPrice, priceFetchPeriod);
+            setTimeout(updateEthBtcPrice, priceFetchPeriod);
         }
     });
+}
+
+function updateTokensPrices() {
+    var apiKey = "freekey";
+    var action = 'getTokenInfo';
+    for (var tokenInfo of tokensInfo) {
+        var token = tokenInfo[1];
+        var url = "https://api.ethplorer.io" + '/' + action + '/' + token.contract + '?apiKey=' + apiKey;
+        $.ajax({
+            type: "GET",
+            url: url,
+            crossDomain: true,
+            dataType: "json",
+            success: function (data, status, jqXHR) {
+                var tokenPrice = parseFloat(data['price']['rate']);
+                tokensInfo.get(data['symbol']).price = tokenPrice;
+                console.log('Price data received - ' + data['symbol'] + ': usd ' + tokenPrice);
+            },
+            error: function (jqXHR, status) {
+                // error handler
+                console.log('Price data fail: token');
+            }
+        });
+    }
+    setTimeout(updateTokensPrices, priceFetchPeriod);
 }
 
 
@@ -501,7 +526,8 @@ function initTooltip(jquery_selector) {
 console.log('- All controller loaded -');
 $(document).ready(function () {
     loadSavedAccountsFromCookie();
-    updateEthPrice();
+    updateEthBtcPrice();
+    setTimeout(updateTokensPrices, accountFetchPeriod);
     startAccountRefresh();
 });
 
