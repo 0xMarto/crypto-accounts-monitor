@@ -79,6 +79,12 @@ function createAccountCard(account) {
         accountHTML += '<h2 class="balance tooltipster">-.-----</h2>';
         accountHTML += '<span class="balance-label">POLY | </span>';
         var infoUrl = 'https://etherscan.io/tokenholdings?a=' + account.address;
+    } else if (account.currency === 'CDP') {
+        accountHTML += '<img src="images/cdp_token_grey.png" class="crypto-logo">';
+        accountHTML += '<div class="text">';
+        accountHTML += '<h2 class="balance tooltipster">-.-----</h2>';
+        accountHTML += '<span class="balance-label">DAI | </span>';
+        var infoUrl = 'https://mkr.tools/cdp/' + account.address;
     } else {
         // Case: ETH
         accountHTML += '<img src="images/eth_outline.png" class="crypto-logo">';
@@ -87,14 +93,23 @@ function createAccountCard(account) {
         accountHTML += '<span class="balance-label">Ethers | </span>';
         var infoUrl = 'https://etherscan.io/address/' + account.address;
     }
-    accountHTML += '<b class="usd-balance">usd ---.--</b>';
-    accountHTML += '</div>';
-    accountHTML += '</div>';
-    var pre = account.address.substr(0, 5);
-    var pos = account.address.slice(-5);
-    accountHTML += '<p class="added-address">';
-    accountHTML += '<b>' + account.label + '</b> | ';
-    accountHTML += '<span class="tooltipster" title="' + account.address + '">' + pre + '...' + pos + '</span>';
+    if (account.currency === 'CDP') {
+        accountHTML += '<b><b class="usd-balance">Ratio: ---.-- %</b></b>';
+        accountHTML += '</div>';
+        accountHTML += '</div>';
+        accountHTML += '<p class="added-address">';
+        accountHTML += '<b>' + account.label + '</b> | ';
+        var pos = 'CDP #' + account.address;
+        accountHTML += '<span class="address-slug">' + pos + '</span>';
+    } else {
+        accountHTML += '<b class="usd-balance">usd ---.--</b>';
+         accountHTML += '</div>';
+        var pre = account.address.substr(0, 5);
+        var pos = account.address.slice(-5);
+        accountHTML += '<p class="added-address">';
+        accountHTML += '<b>' + account.label + '</b> | ';
+        accountHTML += '<span class="address-slug tooltipster" title="' + account.address + '">' + pre + '...' + pos + '</span>';
+    }
     accountHTML += '<a class="more-info-btn" target="_blank" href="' + infoUrl + '"> > </a>';
     accountHTML += '</p>';
     accountHTML += '</div>';
@@ -163,6 +178,8 @@ function updateAccounts() {
             requestBtcBalance(account);
         } else if (account.currency === 'ETH') {
             requestEthBalance(account);
+        } else if (account.currency === 'CDP') {
+            requestCdpBalance(account);
         } else {
             requestEthTokenBalance(account);
         }
@@ -200,7 +217,7 @@ function createAccount() {
 
 function addAccount(currency, address, label) {
     // Validate inputs
-    if (currency !== 'BTC' && currency !== 'ETH' && currency !== 'MANA' && currency !== 'MKR' && currency !== 'POLY') {
+    if (['BTC', 'ETH', 'MANA', 'MKR', 'POLY', 'CDP'].indexOf(currency) == 0) {
         console.log('unsupported currency');
         return false;
     }
@@ -209,9 +226,12 @@ function addAccount(currency, address, label) {
     if (currency === 'BTC') {
         var btcAddressFormat = new RegExp("^[13][a-km-zA-HJ-NP-Z1-9]{25,34}$");
         validAddress = btcAddressFormat.test(address);
-    } else {
+    } else if (['ETH', 'MANA', 'MKR', 'POLY'].indexOf(currency) >= 0) {
         var ethAddressFormat = new RegExp("^0x[a-fA-F0-9]{40}$");
         validAddress = ethAddressFormat.test(address);
+    } else {
+        var numberFormat = new RegExp("^[0-9]{1,5}$");
+        validAddress = numberFormat.test(address);
     }
 
     if (!validAddress) {
@@ -371,7 +391,80 @@ function requestEthTokenBalance(account) {
         },
         error: function (jqXHR, status) {
             // error handler
-            console.log('Eth fail: ' + status.code);
+            console.log('Token fail: ' + status.code);
+
+            // Send call to update next account
+            currentAccountUpdated += 1;
+            refreshAccounts();
+        }
+    });
+}
+
+function requestCdpBalance(account) {
+    if (accounts.length === 0) {
+        console.log('No accounts added yet');
+        refreshAccounts();
+    }
+
+    var cdpNumber = account.address;
+    var query = '{getCup(id: ' + cdpNumber + ') {id, lad, art, ink, pip, ratio}}';
+
+    $.ajax({
+        method: "POST",
+        url: "https://sai-mainnet.makerfoundation.com/v1",
+        contentType: "application/json",
+        data: JSON.stringify({query: query, variables: null}),
+        crossDomain: true,
+        dataType: "json",
+        success: function (data, status, jqXHR) {
+            console.log('CDP data received: ' + account.code);
+            var cdpInfo = data.data.getCup;
+            console.log(cdpInfo);
+
+            // Populate account with balance received
+            var balance = cdpInfo.art;
+            var balanceText = balance >= 1000 ? balance.toLocaleString() : balance;
+            var accountCard = $('#' + account.code);
+            accountCard.find('.balance').text(balanceText);
+
+            // Init or update tooltip
+            var title = (new Date).toTimeString();
+            if (accountCard.find('.balance').hasClass('tooltipstered')) {
+                accountCard.find('.balance').tooltipster('content', title);
+            } else {
+                accountCard.find('.balance').prop('title', title);
+                initTooltip(accountCard.find('.balance').parent());
+            }
+
+            // Show balance in USD
+            if (cdpInfo.ratio !== 0) {
+                var ratio = parseFloat(cdpInfo.ratio).toFixed(2);
+                accountCard.find('.usd-balance').text('Ratio: ' + ratio.toLocaleString() + ' %');
+            } else {
+                accountCard.find('.usd-balance').text('Ratio');
+            }
+
+            // Init tooltip
+            var collateral = parseFloat(cdpInfo.ink).toFixed(2);
+            if (!accountCard.find('.usd-balance').hasClass('tooltipstered')) {
+                accountCard.find('.usd-balance').prop('title', 'Collateral: ' + collateral + ' Eth');
+                createTooltip(accountCard.find('.usd-balance'));
+            }
+
+            // Init tooltip
+            var owner = cdpInfo.lad;
+            if (!accountCard.find('.address-slug').hasClass('tooltipstered')) {
+                accountCard.find('.address-slug').prop('title', 'Owner: ' + owner);
+                createTooltip(accountCard.find('.address-slug'));
+            }
+
+            // Send call to update next account
+            currentAccountUpdated += 1;
+            refreshAccounts();
+        },
+        error: function (jqXHR, status) {
+            // error handler
+            console.log('CDP fail: ' + status.code);
 
             // Send call to update next account
             currentAccountUpdated += 1;
@@ -515,7 +608,15 @@ function stopAccountRefresh() {
 
 function initTooltip(jquery_selector) {
     jquery_selector.find('.tooltipster').tooltipster({
-        // theme: 'tooltipster-borderless',
+        theme: 'tooltipster-shadow',
+        animation: 'fade',
+        delay: 300,
+        interactive: true
+    });
+}
+
+function createTooltip(jquery_selector) {
+    jquery_selector.tooltipster({
         theme: 'tooltipster-shadow',
         animation: 'fade',
         delay: 300,
