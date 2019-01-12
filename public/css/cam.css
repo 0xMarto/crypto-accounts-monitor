@@ -88,6 +88,19 @@ h2 {
     margin-top: 15px;
 }
 
+#config-panel .color-theme-panel a {
+    width: 120px;
+    cursor: pointer;
+    font-size: 20px;
+}
+
+#config-panel .color-theme-panel a div {
+    width: 40px;
+    height: 20px;
+    border-radius: 5px;
+    margin: -10px auto 3px;
+}
+
 .vex.vex-theme-flat-attack .vex-dialog-button.vex-dialog-button-primary {
     background: #6ec34e;
     color: #fff;
@@ -173,6 +186,12 @@ h2 {
     color: #1d2124;
 }
 
+.overview-item .added-address span {
+    display: inline-block;
+    width: 100px;
+    text-align: right;
+}
+
 .overview-item .added-address b {
     display: inline-block;
     width: 190px;
@@ -236,7 +255,7 @@ h2 {
     }
 
     .header-desktop {
-        background: #6ec34e;
+        background: #6ec34e !important;
         height: 120px;
     }
 
@@ -288,7 +307,7 @@ h2 {
         padding-left: 0;
     }
 
-    #config-panel h3{
+    #config-panel h4 {
         font-size: 14px;
         margin-top: -20px;
     }

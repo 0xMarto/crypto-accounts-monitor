@@ -1,6 +1,6 @@
 // Main Parameters
 var accountFetchPeriod = 5000;
-var priceFetchPeriod = 20000;
+var priceFetchPeriod = 60000;
 var btcDecimals = 5;
 var ethDecimals = 5;
 
@@ -14,6 +14,7 @@ var tokensInfo = new Map();
 tokensInfo.set('MANA', {'contract': '0x0f5d2fb29fb7d3cfee444a200298f468908cc942', 'price': 0});
 tokensInfo.set('MKR', {'contract': '0x9f8f72aa9304c8b593d555f12ef6589cc3a579a2', 'price': 0});
 tokensInfo.set('POLY', {'contract': '0x9992ec3cf6a55b00978cddf2b27bc6882d88d1ec', 'price': 0});
+tokensInfo.set('DAI', {'contract': '0x89d24a6b4ccb1b6faa2625fe562bdd9a23260359', 'price': 0});
 
 function Account(code, currency, address, label) {
     this.code = code;
@@ -79,6 +80,12 @@ function createAccountCard(account) {
         accountHTML += '<h2 class="balance tooltipster">-.-----</h2>';
         accountHTML += '<span class="balance-label">POLY | </span>';
         var infoUrl = 'https://etherscan.io/tokenholdings?a=' + account.address;
+    } else if (account.currency === 'DAI') {
+        accountHTML += '<img src="images/dai_token_grey.png" class="crypto-logo">';
+        accountHTML += '<div class="text">';
+        accountHTML += '<h2 class="balance tooltipster">-.-----</h2>';
+        accountHTML += '<span class="balance-label">DAI | </span>';
+        var infoUrl = 'https://etherscan.io/tokenholdings?a=' + account.address;
     } else if (account.currency === 'CDP') {
         accountHTML += '<img src="images/cdp_token_grey.png" class="crypto-logo">';
         accountHTML += '<div class="text">';
@@ -94,7 +101,7 @@ function createAccountCard(account) {
         var infoUrl = 'https://etherscan.io/address/' + account.address;
     }
     if (account.currency === 'CDP') {
-        accountHTML += '<b><b class="usd-balance">Ratio: ---.-- %</b></b>';
+        accountHTML += '<b class="usd-balance">ratio ---.--%</b>';
         accountHTML += '</div>';
         accountHTML += '</div>';
         accountHTML += '<p class="added-address">';
@@ -103,7 +110,7 @@ function createAccountCard(account) {
         accountHTML += '<span class="address-slug">' + pos + '</span>';
     } else {
         accountHTML += '<b class="usd-balance">usd ---.--</b>';
-         accountHTML += '</div>';
+        accountHTML += '</div>';
         var pre = account.address.substr(0, 5);
         var pos = account.address.slice(-5);
         accountHTML += '<p class="added-address">';
@@ -217,16 +224,16 @@ function createAccount() {
 
 function addAccount(currency, address, label) {
     // Validate inputs
-    if (['BTC', 'ETH', 'MANA', 'MKR', 'POLY', 'CDP'].indexOf(currency) == 0) {
+    if (['BTC', 'ETH', 'MANA', 'MKR', 'POLY', 'DAI', 'CDP'].indexOf(currency) < 0) {
         console.log('unsupported currency');
         return false;
     }
 
     var validAddress = false;
-    if (currency === 'BTC') {
+    if (currency == 'BTC') {
         var btcAddressFormat = new RegExp("^[13][a-km-zA-HJ-NP-Z1-9]{25,34}$");
         validAddress = btcAddressFormat.test(address);
-    } else if (['ETH', 'MANA', 'MKR', 'POLY'].indexOf(currency) >= 0) {
+    } else if (['ETH', 'MANA', 'MKR', 'POLY', 'DAI'].indexOf(currency) >= 0) {
         var ethAddressFormat = new RegExp("^0x[a-fA-F0-9]{40}$");
         validAddress = ethAddressFormat.test(address);
     } else {
@@ -419,7 +426,6 @@ function requestCdpBalance(account) {
         success: function (data, status, jqXHR) {
             console.log('CDP data received: ' + account.code);
             var cdpInfo = data.data.getCup;
-            console.log(cdpInfo);
 
             // Populate account with balance received
             var balance = cdpInfo.art;
@@ -437,11 +443,11 @@ function requestCdpBalance(account) {
             }
 
             // Show balance in USD
-            if (cdpInfo.ratio !== 0) {
+            if (cdpInfo.ratio && cdpInfo.ratio !== 0) {
                 var ratio = parseFloat(cdpInfo.ratio).toFixed(2);
-                accountCard.find('.usd-balance').text('Ratio: ' + ratio.toLocaleString() + ' %');
+                accountCard.find('.usd-balance').text('ratio ' + ratio.toLocaleString() + '%');
             } else {
-                accountCard.find('.usd-balance').text('Ratio');
+                accountCard.find('.usd-balance').text('ratio');
             }
 
             // Init tooltip
@@ -588,6 +594,27 @@ function updateTokensPrices() {
         });
     }
     setTimeout(updateTokensPrices, priceFetchPeriod);
+}
+
+// Color Themes function
+function changeTheme(themeCode) {
+    if (themeCode === 'blue-sky') {
+        $('.page-container').css('background', 'lightsteelblue');
+        $('.header-desktop').css('background-image', '-moz-linear-gradient(150deg, lightsteelblue 65%, #6ec34e 5%)')
+            .css('background-image', '-webkit-linear-gradient(150deg, lightsteelblue 65%, #6ec34e 5%)')
+            .css('background-image', '-ms-linear-gradient(150deg, lightsteelblue 65%, #6ec34e 5%)');
+    } else if (themeCode === 'forest') {
+        $('.page-container').css('background', 'forestgreen');
+        $('.header-desktop').css('background-image', '-moz-linear-gradient(150deg, forestgreen 65%, #6ec34e 5%)')
+            .css('background-image', '-webkit-linear-gradient(150deg, forestgreen 65%, #6ec34e 5%)')
+            .css('background-image', '-ms-linear-gradient(150deg, forestgreen 65%, #6ec34e 5%)');
+    } else {
+        // Case Dark Theme
+        $('.page-container').css('background', '#1d2123');
+        $('.header-desktop').css('background-image', '-moz-linear-gradient(150deg, #1d2123 65%, #6ec34e 5%)')
+            .css('background-image', '-webkit-linear-gradient(150deg, #1d2123 65%, #6ec34e 5%)')
+            .css('background-image', '-ms-linear-gradient(150deg, #1d2123 65%, #6ec34e 5%)');
+    }
 }
 
 
