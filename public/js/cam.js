@@ -542,8 +542,7 @@ function updateEthBtcPrice() {
     var module = 'stats';
     var action = 'ethprice';
 
-    var etherScanUrl = "https://api.etherscan.io/api" +
-        '?module=' + module + '&action=' + action + '&apikey' + etherScanApiKey;
+    var etherScanUrl = "https://api.etherscan.io/api" + '?action=' + action + '&module=' + module + '&apikey' + etherScanApiKey;
 
     $.ajax({
         type: "GET",
