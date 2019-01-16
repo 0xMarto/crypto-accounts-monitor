@@ -609,10 +609,10 @@ function changeTheme(themeCode) {
             .css('background-image', '-ms-linear-gradient(150deg, forestgreen 65%, #6ec34e 5%)');
     } else {
         // Case Dark Theme
-        $('.page-container').css('background', '#1d2123');
-        $('.header-desktop').css('background-image', '-moz-linear-gradient(150deg, #1d2123 65%, #6ec34e 5%)')
-            .css('background-image', '-webkit-linear-gradient(150deg, #1d2123 65%, #6ec34e 5%)')
-            .css('background-image', '-ms-linear-gradient(150deg, #1d2123 65%, #6ec34e 5%)');
+        $('.page-container').css('background', '#10171e');
+        $('.header-desktop').css('background-image', '-moz-linear-gradient(150deg, #10171e 65%, #6ec34e 5%)')
+            .css('background-image', '-webkit-linear-gradient(150deg, #10171e 65%, #6ec34e 5%)')
+            .css('background-image', '-ms-linear-gradient(150deg, #10171e 65%, #6ec34e 5%)');
     }
 }
 

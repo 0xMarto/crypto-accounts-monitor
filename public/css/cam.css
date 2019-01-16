@@ -5,7 +5,7 @@ html, body {
 
 .page-container {
     padding-left: 0 !important;
-    background: #1d2124;
+    background: #10171e;
 }
 
 .motto {
@@ -17,9 +17,9 @@ html, body {
 .header-desktop {
     left: 0;
     background-color: #808080;
-    background-image: -moz-linear-gradient(150deg, #1d2123 65%, #6ec34e 5%);
-    background-image: -webkit-linear-gradient(150deg, #1d2123 65%, #6ec34e 5%);
-    background-image: -ms-linear-gradient(150deg, #1d2123 65%, #6ec34e 5%);
+    background-image: -moz-linear-gradient(150deg, #10171e 65%, #6ec34e 5%);
+    background-image: -webkit-linear-gradient(150deg, #10171e 65%, #6ec34e 5%);
+    background-image: -ms-linear-gradient(150deg, #10171e 65%, #6ec34e 5%);
     -webkit-box-shadow: none;
     -moz-box-shadow: none;
     box-shadow: none;
@@ -183,7 +183,7 @@ h2 {
     text-align: right;
     padding-top: 20px;
     padding-bottom: 10px;
-    color: #1d2124;
+    color: #10171e;
 }
 
 .overview-item .added-address span {
@@ -265,7 +265,7 @@ h2 {
 
     #right-footer {
         position: relative;
-        background: #1d2124;
+        background: #10171e;
         bottom: 0;
         right: 0;
         text-align: center;
@@ -275,7 +275,7 @@ h2 {
 
     #left-footer {
         position: relative;
-        background: #1d2124;
+        background: #10171e;
         bottom: 0;
         left: 0;
         text-align: center;
