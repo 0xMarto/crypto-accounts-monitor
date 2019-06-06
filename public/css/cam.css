@@ -194,7 +194,8 @@ h2 {
 
 .overview-item .added-address b {
     display: inline-block;
-    width: 190px;
+    width: auto;
+    max-width: 190px;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -208,13 +209,13 @@ h2 {
 }
 
 /* Responsive media queries to support all resolutions*/
-@media only screen and (min-width: 2500px) {
+@media only screen and (min-width: 1681px) {
     #account-container {
         margin: 30px auto;
     }
 }
 
-@media only screen and (min-width: 1331px) and (max-width: 1680px) {
+@media only screen and (min-width: 1441px) and (max-width: 1680px) {
     #account-container .balance-label {
         font-size: 12px;
     }

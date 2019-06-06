@@ -650,11 +650,22 @@ function createTooltip(jquery_selector) {
     });
 }
 
+function startWeb3Support() {
+    console.log('Starting Web3...');
+    web = new Web3(new Web3.providers.HttpProvider('https://mainnet.infura.io'));
+    var address = '0xB39794b9921fBff79565dD15682E5793a0d07B68';
+    var checksumed_address = web.utils.toChecksumAddress(address);
+    web.eth.getBalance(checksumed_address).then(console.log);
+    console.log('Starting Web3 Done');
+}
+
 console.log('- All controller loaded -');
 $(document).ready(function () {
     loadSavedAccountsFromCookie();
     updateEthBtcPrice();
     setTimeout(updateTokensPrices, accountFetchPeriod);
     startAccountRefresh();
+
+    startWeb3Support();
 });
 
