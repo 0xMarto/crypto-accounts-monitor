@@ -6,7 +6,8 @@
     <meta name="author" content="Marto">
     <meta name="version" content="1.6.6">
     <title>Crypto Monitor</title>
-    <meta name="description" content="The place where you can track all your favorites accounts at the same time. No private data or key needed. Nothing stored.">
+    <meta name="description"
+          content="The place where you can track all your favorites accounts at the same time. No private data or key needed. Nothing stored.">
     <meta name="keywords" content="crypto account monitor tracker address address-monitor address-tracker">
 
     <link rel="apple-touch-icon" sizes="57x57" href="images/icon/apple-icon-57x57.png">
@@ -87,7 +88,8 @@
                                     <img src="images/btn_config.png">
                                 </button>
                                 <div id="new-account-panel" style="display:none;">
-                                    <input id="acc-address" placeholder="Address... or CDP #" style="width:380px;"/>
+                                    <input id="acc-address" placeholder="Account Address... or CDP #"
+                                           style="width:380px;"/>
                                     <select id="acc-currency">
                                         <option value="ETH">ETH</option>
                                         <option value="BTC">BTC</option>
@@ -98,6 +100,7 @@
                                             <option value="POLY">POLY</option>
                                         </optgroup>
                                         <optgroup label="Special">
+                                            <option value="CDAI">Compound DAI</option>
                                             <option value="CDP">Maker CDP</option>
                                         </optgroup>
                                     </select>
@@ -364,7 +367,7 @@
 <script type="text/javascript" src="vendor/tooltipster/tooltipster.bundle.min.js"></script>
 <script type="text/javascript" src="vendor/vex/vex.combined.min.js"></script>
 <script>vex.defaultOptions.className = 'vex-theme-flat-attack'</script>
-<script type="text/javascript" src="vendor/ethereum/web3.min.js"></script>
+<!--<script type="text/javascript" src="vendor/ethereum/web3.min.js"></script>-->
 <!--<script type="text/javascript" src="js/cam-prod-min.js"></script>-->
 <script type="text/javascript" src="js/cam.js"></script>
 </body>

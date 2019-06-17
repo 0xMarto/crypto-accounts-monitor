@@ -15,7 +15,9 @@ tokensInfo.set('MANA', {'contract': '0x0f5d2fb29fb7d3cfee444a200298f468908cc942'
 tokensInfo.set('MKR', {'contract': '0x9f8f72aa9304c8b593d555f12ef6589cc3a579a2', 'price': 0});
 tokensInfo.set('POLY', {'contract': '0x9992ec3cf6a55b00978cddf2b27bc6882d88d1ec', 'price': 0});
 tokensInfo.set('DAI', {'contract': '0x89d24a6b4ccb1b6faa2625fe562bdd9a23260359', 'price': 0});
+tokensInfo.set('CDAI', {'contract': '0xf5dce57282a584d2746faf1593d3121fcac444dc', 'price': 0, 'rate': 0});
 
+// Data model
 function Account(code, currency, address, label) {
     this.code = code;
     this.currency = currency;
@@ -86,6 +88,12 @@ function createAccountCard(account) {
         accountHTML += '<h2 class="balance tooltipster">-.-----</h2>';
         accountHTML += '<span class="balance-label">DAI | </span>';
         var infoUrl = 'https://etherscan.io/tokenholdings?a=' + account.address;
+    } else if (account.currency === 'CDAI') {
+        accountHTML += '<img src="images/cdp_token_grey.png" class="crypto-logo">';
+        accountHTML += '<div class="text">';
+        accountHTML += '<h2 class="balance tooltipster">-.-----</h2>';
+        accountHTML += '<span class="balance-label">DAI | </span>';
+        var infoUrl = 'https://etherscan.io/tokenholdings?a=' + account.address;
     } else if (account.currency === 'CDP') {
         accountHTML += '<img src="images/cdp_token_grey.png" class="crypto-logo">';
         accountHTML += '<div class="text">';
@@ -100,15 +108,24 @@ function createAccountCard(account) {
         accountHTML += '<span class="balance-label">Ethers | </span>';
         var infoUrl = 'https://etherscan.io/address/' + account.address;
     }
+
+    // Balance and details part
     if (account.currency === 'CDP') {
         accountHTML += '<b class="usd-balance">ratio ---.--%</b>';
-        accountHTML += '</div>';
         accountHTML += '</div>';
         accountHTML += '<p class="added-address">';
         accountHTML += '<b>' + account.label + '</b> | ';
         var pos = 'CDP #' + account.address;
         accountHTML += '<span class="address-slug">' + pos + '</span>';
-    } else {
+    } else if (account.currency === 'CDAI') {
+        accountHTML += '<b class="usd-balance">rate -.--%</b>';
+        accountHTML += '</div>';
+        var pre = account.address.substr(0, 5);
+        var pos = account.address.slice(-5);
+        accountHTML += '<p class="added-address">';
+        accountHTML += '<b>' + account.label + '</b> | ';
+        accountHTML += '<span class="address-slug tooltipster" title="' + account.address + '">' + pre + '...' + pos + '</span>';
+    }else {
         accountHTML += '<b class="usd-balance">usd ---.--</b>';
         accountHTML += '</div>';
         var pre = account.address.substr(0, 5);
@@ -187,6 +204,8 @@ function updateAccounts() {
             requestEthBalance(account);
         } else if (account.currency === 'CDP') {
             requestCdpBalance(account);
+        } else if (account.currency === 'CDAI') {
+            requestCompoundBalance(account);
         } else {
             requestEthTokenBalance(account);
         }
@@ -224,7 +243,7 @@ function createAccount() {
 
 function addAccount(currency, address, label) {
     // Validate inputs
-    if (['BTC', 'ETH', 'MANA', 'MKR', 'POLY', 'DAI', 'CDP'].indexOf(currency) < 0) {
+    if (['BTC', 'ETH', 'MANA', 'MKR', 'POLY', 'DAI', 'CDP', 'CDAI'].indexOf(currency) < 0) {
         console.log('unsupported currency');
         return false;
     }
@@ -233,10 +252,11 @@ function addAccount(currency, address, label) {
     if (currency == 'BTC') {
         var btcAddressFormat = new RegExp("^[13][a-km-zA-HJ-NP-Z1-9]{25,34}$");
         validAddress = btcAddressFormat.test(address);
-    } else if (['ETH', 'MANA', 'MKR', 'POLY', 'DAI'].indexOf(currency) >= 0) {
+    } else if (['ETH', 'MANA', 'MKR', 'POLY', 'DAI', 'CDAI'].indexOf(currency) >= 0) {
         var ethAddressFormat = new RegExp("^0x[a-fA-F0-9]{40}$");
         validAddress = ethAddressFormat.test(address);
     } else {
+        // Just for CPD number format
         var numberFormat = new RegExp("^[0-9]{1,5}$");
         validAddress = numberFormat.test(address);
     }
@@ -398,7 +418,70 @@ function requestEthTokenBalance(account) {
         },
         error: function (jqXHR, status) {
             // error handler
-            console.log('Token fail: ' + status.code);
+            console.log('Token fail: ' + + account.code + ' | '+ status.code);
+
+            // Send call to update next account
+            currentAccountUpdated += 1;
+            refreshAccounts();
+        }
+    });
+}
+
+function requestCompoundBalance(account) {
+    if (accounts.length === 0) {
+        console.log('No accounts added yet');
+        refreshAccounts();
+    }
+
+    var module = 'account';
+    var address = account.address;
+
+    var etherScanUrl = "https://api.compound.finance/api/v2/" + module + '?addresses[]=' + address;
+
+    $.ajax({
+        type: "GET",
+        url: etherScanUrl,
+        data: {},
+        crossDomain: true,
+        dataType: "json",
+        success: function (data, status, jqXHR) {
+            // ACA DEJE 17/6/19, Lunes
+            console.log('Token data received: ' + account.code);
+
+            // Populate account with balance received
+            var balance = ethFromWei(data['result']);
+            var balanceText = balance >= 1000 ? balance.toLocaleString() : balance;
+            var accountCard = $('#' + account.code);
+            accountCard.find('.balance').text(balanceText);
+
+            // Init or update tooltip
+            var title = (new Date).toTimeString();
+            if (accountCard.find('.balance').hasClass('tooltipstered')) {
+                accountCard.find('.balance').tooltipster('content', title);
+            } else {
+                accountCard.find('.balance').prop('title', title);
+                initTooltip(accountCard.find('.balance').parent());
+            }
+
+            // Show balance in USD
+            var tokenPrice = tokensInfo.get(account.currency).price;
+            if (tokenPrice !== 0) {
+                var usdBalance = parseFloat((balance * tokenPrice).toFixed(2));
+                if (usdBalance > 99000000) {
+                    usdBalance = Math.round(usdBalance);
+                }
+                accountCard.find('.usd-balance').text('usd ' + usdBalance.toLocaleString());
+            } else {
+                accountCard.find('.usd-balance').text('Token');
+            }
+
+            // Send call to update next account
+            currentAccountUpdated += 1;
+            refreshAccounts();
+        },
+        error: function (jqXHR, status) {
+            // error handler
+            console.log('Token fail: ' + + account.code + ' | '+ status.code);
 
             // Send call to update next account
             currentAccountUpdated += 1;
@@ -575,6 +658,14 @@ function updateTokensPrices() {
     var action = 'getTokenInfo';
     for (var tokenInfo of tokensInfo) {
         var token = tokenInfo[1];
+
+        // Verify if it's a Compound token
+        if (tokenInfo[0] == 'CDAI') {
+            getCompoundTokenInfo(token.contract);
+            continue
+        }
+
+        // Get info from eth explorer for normal tokens
         var url = "https://api.ethplorer.io" + '/' + action + '/' + token.contract + '?apiKey=' + apiKey;
         $.ajax({
             type: "GET",
@@ -582,18 +673,53 @@ function updateTokensPrices() {
             crossDomain: true,
             dataType: "json",
             success: function (data, status, jqXHR) {
-                var tokenPrice = parseFloat(data['price']['rate']);
-                tokensInfo.get(data['symbol']).price = tokenPrice;
-                console.log('Price data received - ' + data['symbol'] + ': usd ' + tokenPrice);
+                if (data['symbol']) {
+                    var tokenSymbol = data['symbol'].toUpperCase();
+                    var tokenPrice = parseFloat(data['price']['rate']);
+                    tokensInfo.get(tokenSymbol).price = tokenPrice;
+                    console.log('Price data received - ' + tokenSymbol + ': usd ' + tokenPrice);
+                } else {
+                    console.log('Price data fail: token (received data)');
+                }
             },
             error: function (jqXHR, status) {
                 // error handler
-                console.log('Price data fail: token');
+                console.log('Price data fail: token (network)');
             }
         });
     }
     setTimeout(updateTokensPrices, priceFetchPeriod);
 }
+
+function getCompoundTokenInfo(address) {
+    var module = 'ctoken';
+    var compoundUrl = "https://api.compound.finance/api/v2/" + module + '?addresses[]=' + address;
+    $.ajax({
+        type: "GET",
+        url: compoundUrl,
+        data: {},
+        crossDomain: true,
+        dataType: "json",
+        success: function (data, status, jqXHR) {
+            if (data['cToken']) {
+                console.log();
+                var tokenSymbol = data['cToken'][0]['symbol'].toUpperCase();
+                var tokenPrice = parseFloat(data['cToken'][0]['underlying_price']['value']);
+                var tokenRate = parseFloat(data['cToken'][0]['supply_rate']['value']);
+                tokensInfo.get(tokenSymbol).price = tokenPrice;
+                tokensInfo.get(tokenSymbol).rate = tokenRate;
+                console.log('Price data received - ' + tokenSymbol + ': usd ' + tokenPrice + ' | rate: ' + tokenRate);
+            } else {
+                console.log('Price data fail: compound token (received data)');
+            }
+        },
+        error: function (jqXHR, status) {
+            // error handler
+            console.log('Price data fail: compound token (network)');
+        }
+    });
+}
+
 
 // Color Themes function
 function changeTheme(themeCode) {
@@ -653,9 +779,12 @@ function createTooltip(jquery_selector) {
 function startWeb3Support() {
     console.log('Starting Web3...');
     web = new Web3(new Web3.providers.HttpProvider('https://mainnet.infura.io'));
+
+    // Test node connection support
     var address = '0xB39794b9921fBff79565dD15682E5793a0d07B68';
     var checksumed_address = web.utils.toChecksumAddress(address);
     web.eth.getBalance(checksumed_address).then(console.log);
+
     console.log('Starting Web3 Done');
 }
 
@@ -665,7 +794,6 @@ $(document).ready(function () {
     updateEthBtcPrice();
     setTimeout(updateTokensPrices, accountFetchPeriod);
     startAccountRefresh();
-
-    startWeb3Support();
+    // startWeb3Support();
 });
 

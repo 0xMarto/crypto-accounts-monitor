@@ -211,7 +211,7 @@ h2 {
 /* Responsive media queries to support all resolutions*/
 @media only screen and (min-width: 1681px) {
     #account-container {
-        margin: 30px auto;
+        margin: 30px auto 0 auto;
     }
 }
 
