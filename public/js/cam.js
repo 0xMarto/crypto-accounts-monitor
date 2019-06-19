@@ -1,9 +1,3 @@
-// Main Parameters
-var accountFetchPeriod = 5000;
-var priceFetchPeriod = 60000;
-var btcDecimals = 5;
-var ethDecimals = 5;
-
 // Main Variables and data model
 var accounts = [];
 var currentAccountUpdated = 0;
@@ -24,6 +18,12 @@ function Account(code, currency, address, label) {
     this.address = address;
     this.label = label;
 }
+
+// Main Control Parameters
+var accountFetchPeriod = 5000;
+var priceFetchPeriod = 60000;
+var btcDecimals = 5;
+var ethDecimals = 5;
 
 
 // GUI functions
@@ -89,7 +89,7 @@ function createAccountCard(account) {
         accountHTML += '<span class="balance-label">DAI | </span>';
         var infoUrl = 'https://etherscan.io/tokenholdings?a=' + account.address;
     } else if (account.currency === 'CDAI') {
-        accountHTML += '<img src="images/cdp_token_grey.png" class="crypto-logo">';
+        accountHTML += '<img src="images/cdai_token_grey.png" class="crypto-logo">';
         accountHTML += '<div class="text">';
         accountHTML += '<h2 class="balance tooltipster">-.-----</h2>';
         accountHTML += '<span class="balance-label">DAI | </span>';
@@ -445,12 +445,27 @@ function requestCompoundBalance(account) {
         crossDomain: true,
         dataType: "json",
         success: function (data, status, jqXHR) {
-            // ACA DEJE 17/6/19, Lunes
             console.log('Token data received: ' + account.code);
 
-            // Populate account with balance received
-            var balance = ethFromWei(data['result']);
-            var balanceText = balance >= 1000 ? balance.toLocaleString() : balance;
+            var balanceText = '0';
+            var balance = 0;
+            var interestEarn = 0;
+            if(data['accounts'].length > 0){
+                var accountTokens = data['accounts'][0]['tokens'];
+                for (var token of accountTokens) {
+                    // Check for the current currency contract
+                    if(token['address'] == tokensInfo.get(account.currency).contract) {
+                        // Populate account with balance received
+                        balance = parseFloat(token['supply_balance_underlying'].value);
+                        balanceText = balance >= 1000 ? balance.toLocaleString() : balance.toString();
+
+                        // Interest gain
+                        interestEarn = parseFloat(token['lifetime_supply_interest_accrued'].value);
+                    }
+                }
+            }
+
+            // Show balance in account card
             var accountCard = $('#' + account.code);
             accountCard.find('.balance').text(balanceText);
 
@@ -464,15 +479,25 @@ function requestCompoundBalance(account) {
             }
 
             // Show balance in USD
-            var tokenPrice = tokensInfo.get(account.currency).price;
-            if (tokenPrice !== 0) {
-                var usdBalance = parseFloat((balance * tokenPrice).toFixed(2));
-                if (usdBalance > 99000000) {
-                    usdBalance = Math.round(usdBalance);
+            var tokenRate = tokensInfo.get(account.currency).rate;
+            if (tokenRate > 0) {
+                var tokenRateStr = parseFloat((tokenRate * 100).toFixed(2));
+                if (tokenRateStr > 99000000) {
+                    tokenRateStr = Math.round(tokenRateStr);
                 }
-                accountCard.find('.usd-balance').text('usd ' + usdBalance.toLocaleString());
+                accountCard.find('.usd-balance').text('rate ' + tokenRateStr.toLocaleString() + '%');
+
+                // Init Collateralization Ratio tooltip
+                if( interestEarn > 0) {
+                    var interestEarnStr = interestEarn.toFixed(2);
+                    if (!accountCard.find('.usd-balance').hasClass('tooltipstered')) {
+                        var title = 'Total interest earn: ' + interestEarnStr + ' DAI';
+                        accountCard.find('.usd-balance').prop('title', title);
+                        createTooltip(accountCard.find('.usd-balance'));
+                    }
+                }
             } else {
-                accountCard.find('.usd-balance').text('Token');
+                accountCard.find('.usd-balance').text('rate -.--%');
             }
 
             // Send call to update next account
@@ -511,8 +536,8 @@ function requestCdpBalance(account) {
             var cdpInfo = data.data.getCup;
 
             // Populate account with balance received
-            var balance = cdpInfo.art;
-            var balanceText = balance >= 1000 ? balance.toLocaleString() : balance;
+            var balance = parseFloat(cdpInfo.art);
+            var balanceText = balance >= 1000 ? balance.toLocaleString() : balance.toString();
             var accountCard = $('#' + account.code);
             accountCard.find('.balance').text(balanceText);
 
@@ -525,7 +550,7 @@ function requestCdpBalance(account) {
                 initTooltip(accountCard.find('.balance').parent());
             }
 
-            // Show balance in USD
+            // Show Collateralization Ratio
             if (cdpInfo.ratio && cdpInfo.ratio !== 0) {
                 var ratio = parseFloat(cdpInfo.ratio).toFixed(2);
                 accountCard.find('.usd-balance').text('ratio ' + ratio.toLocaleString() + '%');
@@ -533,14 +558,14 @@ function requestCdpBalance(account) {
                 accountCard.find('.usd-balance').text('ratio');
             }
 
-            // Init tooltip
+            // Init Collateralization Ratio tooltip
             var collateral = parseFloat(cdpInfo.ink).toFixed(2);
             if (!accountCard.find('.usd-balance').hasClass('tooltipstered')) {
-                accountCard.find('.usd-balance').prop('title', 'Collateral: ' + collateral + ' Eth');
+                accountCard.find('.usd-balance').prop('title', 'Deposited collateral: ' + collateral + ' ETH');
                 createTooltip(accountCard.find('.usd-balance'));
             }
 
-            // Init tooltip
+            // Init CDP Owner tooltip
             var owner = cdpInfo.lad;
             if (!accountCard.find('.address-slug').hasClass('tooltipstered')) {
                 accountCard.find('.address-slug').prop('title', 'Owner: ' + owner);
@@ -570,7 +595,7 @@ function requestBtcBalance(account) {
 
     var address = account.address;
 
-    var blockexplorerUrl = "https://blockexplorer.com/api/addr/" + address + '/balance';
+    var blockexplorerUrl = "https://chain.so/api/v2/get_address_balance/BTC/" + address;
 
     $.ajax({
         type: "GET",
@@ -579,21 +604,23 @@ function requestBtcBalance(account) {
         crossDomain: true,
         dataType: "json",
         success: function (data, status, jqXHR) {
-            console.log('Btc data received: ' + account.code);
+            console.log('BTC data received: ' + account.code);
 
-            // Populate account with balance received
-            var balance = btcFromSatoshi(data.toString());
-            var balanceText = balance >= 1000 ? balance.toLocaleString() : balance;
-            var accountCard = $('#' + account.code);
-            accountCard.find('.balance').text(balanceText);
+            if (data['data']['confirmed_balance']){
+                // Populate account with balance received
+                var balance = data['data']['confirmed_balance'];
+                var balanceText = balance >= 1000 ? balance.toLocaleString() : balance;
+                var accountCard = $('#' + account.code);
+                accountCard.find('.balance').text(balanceText);
 
-            // Init or update tooltip
-            var title = (new Date).toTimeString();
-            if (accountCard.find('.balance').hasClass('tooltipstered')) {
-                accountCard.find('.balance').tooltipster('content', title);
-            } else {
-                accountCard.find('.balance').prop('title', title);
-                initTooltip(accountCard.find('.balance').parent());
+                // Init or update tooltip
+                var title = (new Date).toTimeString();
+                if (accountCard.find('.balance').hasClass('tooltipstered')) {
+                    accountCard.find('.balance').tooltipster('content', title);
+                } else {
+                    accountCard.find('.balance').prop('title', title);
+                    initTooltip(accountCard.find('.balance').parent());
+                }
             }
 
             // Show balance in USD
@@ -662,7 +689,7 @@ function updateTokensPrices() {
         // Verify if it's a Compound token
         if (tokenInfo[0] == 'CDAI') {
             getCompoundTokenInfo(token.contract);
-            continue
+            continue;
         }
 
         // Get info from eth explorer for normal tokens
