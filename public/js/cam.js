@@ -595,20 +595,20 @@ function requestBtcBalance(account) {
 
     var address = account.address;
 
-    var blockexplorerUrl = "https://chain.so/api/v2/get_address_balance/BTC/" + address;
-
+    var btcInfoUrl = "https://blockchain.info/q/addressbalance/" + address + "?confirmations=6";
+    console.log("Sending to: " + btcInfoUrl);
     $.ajax({
         type: "GET",
-        url: blockexplorerUrl,
+        url: btcInfoUrl,
         data: {},
         crossDomain: true,
+        contentType: "text/plain",
         dataType: "json",
         success: function (data, status, jqXHR) {
             console.log('BTC data received: ' + account.code);
-
-            if (data['data']['confirmed_balance']){
+            if (data){
                 // Populate account with balance received
-                var balance = data['data']['confirmed_balance'];
+                var balance = parseInt(data) / 100000000;
                 var balanceText = balance >= 1000 ? balance.toLocaleString() : balance;
                 var accountCard = $('#' + account.code);
                 accountCard.find('.balance').text(balanceText);
@@ -823,4 +823,6 @@ $(document).ready(function () {
     startAccountRefresh();
     // startWeb3Support();
 });
+
+
 
